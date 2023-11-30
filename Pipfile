@@ -13,6 +13,7 @@ flask-bcrypt = "*"
 flask-login = "*"
 sqlalchemy-serializer = "*"
 requests = "*"
+flask-restful = "*"
 
 [dev-packages]
 
