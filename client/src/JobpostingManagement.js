@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
-import { Formik } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { useUserContext } from './UserContext'; 
+import { useUserContext } from './UserContext';
 import './JobpostingManagement.css';
 
 const jobPostingSchema = Yup.object().shape({
@@ -78,7 +77,7 @@ function JobPostingManagement() {
             body: JSON.stringify(values)
         }
 
-        const response = await fetch(`/jobposting/update/${selectedJobPosting.id}`, requestOptions);
+    const response = await fetch(`/jobposting/update/${selectedJobPosting.id}`, requestOptions);
         if (response.ok) {
             alert('Job posting updated successfully');
             setJobPostings(jobPostings.map(posting => (posting.id === selectedJobPosting.id ? values : posting)))
@@ -89,8 +88,89 @@ function JobPostingManagement() {
         actions.setSubmitting(false)
     }
 
+    const renderUpdateModal = (selectedJobPosting) => {
+        if (!selectedJobPosting) return null; // Render nothing if no posting is selected
+    
+        return (
+            <div className="overlay">
+                <div className="modal-content">
+                    <span className="close" onClick={handleModalClose}>&times;</span>
+                    <h2>Update Job Posting</h2>
+                    <Formik
+                        initialValues={selectedJobPosting}
+                        validationSchema={jobPostingSchema}
+                        onSubmit={handleUpdateSubmit}
+                        enableReinitialize
+                    >
+                        {({ handleSubmit, isSubmitting, handleChange, values }) => (
+                            <Form onSubmit={handleSubmit}>
+                                <div className="form-group">
+                                    <label htmlFor="title">Title</label>
+                                    <Field name="title" type="text" />
+                                    <ErrorMessage name="title" component="div" />
+                                </div>
+    
+                                <div className="form-group">
+                                    <label htmlFor="description">Description</label>
+                                    <Field name="description" as="textarea" />
+                                    <ErrorMessage name="description" component="div" />
+                                </div>
+    
+                                <div className="form-group">
+                                    <label htmlFor="responsibilities">Responsibilities</label>
+                                    <Field name="responsibilities" as="textarea" />
+                                    <ErrorMessage name="responsibilities" component="div" />
+                                </div>
+    
+                                <div className="form-group">
+                                    <label htmlFor="qualifications">Qualifications</label>
+                                    <Field name="qualifications" as="textarea" />
+                                    <ErrorMessage name="qualifications" component="div" />
+                                </div>
+    
+                                <div className="form-group">
+                                    <label htmlFor="instructions">How to Apply</label>
+                                    <Field name="instructions" as="textarea" />
+                                    <ErrorMessage name="instructions" component="div" />
+                                </div>
+    
+                                <div className="form-group">
+                                    <label htmlFor="job_type">Job Type</label>
+                                    <Field name="job_type" as="select">
+                                        <option value="">Select Job Type</option>
+                                        <option value="full-time">Full-Time</option>
+                                        <option value="part-time">Part-Time</option>
+                                        <option value="contract">Contract</option>
+                                    </Field>
+                                    <ErrorMessage name="job_type" component="div" />
+                                </div>
+    
+                                <div className="form-group">
+                                    <label htmlFor="location">Location</label>
+                                    <Field name="location" type="text" />
+                                    <ErrorMessage name="location" component="div" />
+                                </div>
+    
+                                <div className="form-group">
+                                    <label htmlFor="salary_range">Salary Range (Ksh)</label>
+                                    <Field name="salary_range" type="text" />
+                                    <ErrorMessage name="salary_range" component="div" />
+                                </div>
+    
+                                <div className="form-buttons">
+                                    <button type="button" onClick={handleModalClose}>Cancel</button>
+                                    <button type="submit" disabled={isSubmitting}>Save Changes</button>
+                                </div>
+                            </Form>
+                        )}
+                    </Formik>
+                </div>
+            </div>
+        );
+    };
+    
     return (
-        <div>
+        <div className="job-posting-management">
             <h1>Job Posting Management</h1>
             <table>
                 <thead>
@@ -101,104 +181,24 @@ function JobPostingManagement() {
                     </tr>
                 </thead>
                 <tbody>
-                    {jobPostings.map((posting) => (
-                        <tr key={posting.id}>
+                        {jobPostings.map((posting) => (
+                            <tr key={posting.id}>
                             <td>{posting.title}</td>
                             <td>{posting.description}</td>
                             <td>
-                                <Button onClick={() => handleUpdate(posting)}>Update</Button>
-                                <Button onClick={() => handleDelete(posting.id)}>Delete</Button>
-                            </td>
-                        </tr>
+                        <button onClick={() => handleUpdate(posting)}>Update</button>
+                        <button onClick={() => handleDelete(posting.id)}>Delete</button>
+                    </td>
+                    </tr>
                     ))}
-                </tbody>
+                    </tbody>
+
+                {showModal && renderUpdateModal(selectedJobPosting)}
             </table>
 
-            <Modal show={showModal} onHide={handleModalClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Update Job Posting</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                <Formik
-                    initialValues={selectedJobPosting || {}}
-                    validationSchema={jobPostingSchema}
-                    onSubmit={handleUpdateSubmit}
-                    enableReinitialize
-                >
-                    {({ handleSubmit, isSubmitting, handleChange, values }) => (
-                            <Form onSubmit={handleSubmit}>
-                                {/* Company Name as a label */}
-                                <Form.Group>
-                                    <Form.Label>Company Name</Form.Label>
-                                    <Form.Label className="ml-2">{selectedJobPosting?.employer?.company_name}</Form.Label>
-                                </Form.Group>
-
-                                {/* Title */}
-                                <Form.Group>
-                                    <Form.Label>Title</Form.Label>
-                                    <Form.Control name="title" value={values.title} onChange={handleChange} />
-                                </Form.Group>
-
-                                {/* Description */}
-                                <Form.Group>
-                                    <Form.Label>Description</Form.Label>
-                                    <Form.Control as="textarea" name="description" value={values.description} onChange={handleChange} />
-                                </Form.Group>
-
-                                {/* Responsibilities */}
-                                <Form.Group>
-                                    <Form.Label>Responsibilities</Form.Label>
-                                    <Form.Control as="textarea" name="responsibilities" value={values.responsibilities} onChange={handleChange} />
-                                </Form.Group>
-
-                                {/* Qualifications */}
-                                <Form.Group>
-                                    <Form.Label>Qualifications</Form.Label>
-                                    <Form.Control as="textarea" name="qualifications" value={values.qualifications} onChange={handleChange} />
-                                </Form.Group>
-
-                                {/* Job Type */}
-                                <Form.Group>
-                                    <Form.Label>Job Type</Form.Label>
-                                    <Form.Control as="select" name="job_type" value={values.job_type} onChange={handleChange}>
-                                        <option value="">Select Job Type</option>
-                                        <option value="full-time">Full-Time</option>
-                                        <option value="part-time">Part-Time</option>
-                                        <option value="contract">Contract</option>
-                                    </Form.Control>
-                                </Form.Group>
-
-                                {/* Instructions */}
-                                <Form.Group>
-                                    <Form.Label>Instructions</Form.Label>
-                                    <Form.Control as="textarea" name="instructions" value={values.instructions} onChange={handleChange} />
-                                </Form.Group>
-
-                                {/* Location */}
-                                <Form.Group>
-                                    <Form.Label>Location</Form.Label>
-                                    <Form.Control name="location" value={values.location} onChange={handleChange} />
-                                </Form.Group>
-
-                                {/* Salary Range */}
-                                <Form.Group>
-                                    <Form.Label>Salary Range Ksh:</Form.Label>
-                                    <Form.Control name="salary_range" value={values.salary_range} onChange={handleChange} />
-                                </Form.Group>
-
-                                <Button variant="secondary" onClick={handleModalClose}>
-                                    Cancel
-                                </Button>
-                                <Button type="submit" disabled={isSubmitting}>
-                                    Save Changes
-                                </Button>
-                            </Form>
-                        )}
-                    </Formik>
-                </Modal.Body>
-            </Modal>
+            {renderUpdateModal()}
         </div>
-    )
+    );
 }
 
-export default JobPostingManagement
+export default JobPostingManagement;

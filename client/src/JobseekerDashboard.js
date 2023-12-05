@@ -6,12 +6,13 @@ import JobpostingListing from './JobpostingList';
 import SeekerProfileManagement from './SeekerProfileManagement';
 import Notifications from './Notification';
 import Logout from './Logout';
-import { Navbar, Nav, Container, Row, Col, Badge } from 'react-bootstrap';
-import { FaUser, FaBell } from 'react-icons/fa';
+import { FaUser, FaBell, FaCheckCircle } from 'react-icons/fa';
+import './JobseekerDashboard.css';
 
 function JobseekerDashboard() {
     const [hasProfile, setHasProfile] = useState(false)
     const [activeComponent, setActiveComponent] = useState('')
+    const [isVerified, setIsVerified] = useState(false);
     const { user } = useUserContext()
     const [notifications, setNotifications] = useState([])
 
@@ -29,21 +30,24 @@ function JobseekerDashboard() {
 
     useEffect(() => {
         const checkJobseekerProfile = async () => {
-            try {
-                if (user && user.userId) {
-                    const response = await fetch(`/jobseeker/profile/${user.userId}`)
+            if (user && user.userId) {
+                try {
+                    const response = await fetch(`/jobseeker/profile/${user.userId}`);
+                    const profileData = await response.json();
                     if (response.ok) {
-                        setHasProfile(true)
-                        setActiveComponent('jobPostings')
+                        setHasProfile(true);
+                        setActiveComponent('jobPostings');
+                        setIsVerified(profileData.is_verified);
+                        console.log('Is verified:', isVerified); // Set verified status
                     } else {
-                        setHasProfile(false)
-                        setActiveComponent('createProfile')
+                        setHasProfile(false);
+                        setActiveComponent('createProfile');
                     }
+                } catch (error) {
+                    console.error('Error checking jobseeker profile:', error);
                 }
-            } catch (error) {
-                console.error('Error checking jobseeker profile:', error)
             }
-        }
+        };
 
         checkJobseekerProfile()
         fetchNotifications()
@@ -51,14 +55,14 @@ function JobseekerDashboard() {
 
     const markNotificationAsRead = async (notificationId) => {
         try {
-            const response = await fetch(`/notifications/read/${notificationId}`, { method: 'PUT' })
+            const response = await fetch(`/notifications/read/${notificationId}`, { method: 'PUT' });
             if (response.ok) {
-                fetchNotifications()
+                fetchNotifications();
             }
         } catch (error) {
-            console.error('Error marking notification as read:', error)
+            console.error('Error marking notification as read:', error);
         }
-    }
+    };
 
     const handleAllNotificationsRead = () => {
         setNotifications(notifications.map(n => ({ ...n, is_read: true })))
@@ -83,43 +87,43 @@ function JobseekerDashboard() {
     const unreadNotificationsCount = notifications.filter(n => !n.is_read).length;
 
     return (
-        <Container>
-            <Navbar bg="light" expand="lg">
-            <Navbar.Brand href="#home">
-                    {user && user.userType === 'jobseeker' && <FaUser />}
-                    {' '}
-                    {user ? user.username : 'Loading...'}
-                </Navbar.Brand>
-                <Navbar.Toggle aria-controls="jobseeker-navbar-nav" />
-                <Navbar.Collapse id="jobseeker-navbar-nav">
-                    <Nav className="mr-auto">
-                        <Nav.Link onClick={() => setActiveComponent('jobPostings')}>Job Postings</Nav.Link>
-                            {!hasProfile && (
-                        <Nav.Link onClick={() => setActiveComponent('createProfile')}>Create Profile</Nav.Link>
-                            )}
-                            {hasProfile && (
-                        <Nav.Link onClick={() => setActiveComponent('manageProfile')}>Manage Profile</Nav.Link>
-                            )}
-                        <Nav.Link onClick={() => setActiveComponent('accountSettings')}>Account Settings</Nav.Link>
-                        <Nav.Link onClick={() => setActiveComponent('notifications')}>
-                            <FaBell />
+        <div className="dashboard-container">
+            <header className="dashboard-header">
+                <div className="brand">
+                    <FaUser className="brand-icon" />
+                    <span className="brand-name">
+                        {user ? user.username : 'Loading...'}
+                        {isVerified && <FaCheckCircle className="verified-icon" />} 
+                    </span>
+                </div>
+                <nav className="dashboard-nav">
+                    <ul>
+                        <li onClick={() => setActiveComponent('jobPostings')}>Job Postings</li>
+                        {!hasProfile && (
+                            <li onClick={() => setActiveComponent('createProfile')}>Create Profile</li>
+                        )}
+                        {hasProfile && (
+                            <li onClick={() => setActiveComponent('manageProfile')}>Manage Profile</li>
+                        )}
+                        <li onClick={() => setActiveComponent('accountSettings')}>Account Settings</li>
+                        <li onClick={() => {
+                            setActiveComponent('notifications');
+                            handleAllNotificationsRead();
+                        }}>
+                            <FaBell className="notification-icon" />
                             {unreadNotificationsCount > 0 && (
-                                <Badge pill variant="danger">{unreadNotificationsCount}</Badge>
+                                <span className="notification-count">{unreadNotificationsCount}</span>
                             )}
-                        </Nav.Link>
-                    </Nav>
-                    <Nav>
-                        <Logout />
-                    </Nav>
-                </Navbar.Collapse>
-            </Navbar>
-            <Row>
-                <Col md={12}>
-                    {renderComponent()}
-                </Col>
-            </Row>
-        </Container>
-    )
+                        </li>
+                    </ul>
+                </nav>
+                <Logout />
+            </header>
+            <main className="dashboard-main">
+                {renderComponent()}
+            </main>
+        </div>
+    );
 }
 
-export default JobseekerDashboard
+export default JobseekerDashboard;

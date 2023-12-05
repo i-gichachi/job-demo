@@ -70,9 +70,12 @@ function AdminUserManagement() {
         <div>
             <h1>Admin User Management</h1>
             {showAlert && (
-                <Alert variant="info" onClose={() => setShowAlert(false)} dismissible>
-                    {alertMessage}
-                </Alert>
+            <div className="custom-alert">
+                <div className="alert-content">{alertMessage}</div>
+                <button type="button" className="close-alert" onClick={() => setShowAlert(false)} aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
             )}
             <div className="table-container">
             <Table striped bordered hover>

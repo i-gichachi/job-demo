@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { FaUser, FaLock, FaHome } from 'react-icons/fa';
-import { Navbar, Nav } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useUserContext } from './UserContext';
@@ -89,49 +88,54 @@ const Login = () => {
     }
     
     return (
-        <div className="login-form">
-            <Navbar bg="light" expand="lg">
-                <Navbar.Brand href="#home"><FaHome /> Home</Navbar.Brand>
-                <Nav className="ml-auto">
-                    <Nav.Link as={Link} to="/signup">Sign Up</Nav.Link>
-                    <Nav.Link as={Link} to="/login">Login</Nav.Link>
-                </Nav>
-            </Navbar>
-            <h2>Login</h2>
-            <form onSubmit={formik.handleSubmit}>
-                <div className="form-group">
-                    <FaUser />
-                    <input
-                        type="text"
-                        name="userIdentifier"
-                        placeholder="Email/Username/Phone"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.userIdentifier}
-                    />
-                    {formik.touched.userIdentifier && formik.errors.userIdentifier ? (
-                        <div className="error">{formik.errors.userIdentifier}</div>
-                    ) : null}
+        <div className="login-page">
+            <nav className="navbar">
+                <Link to="/" className="navbar-brand"><FaHome /> Home</Link>
+                <div className="navbar-nav">
+                    <Link to="/signup" className="nav-item">Sign Up</Link>
+                    <Link to="/login" className="nav-item">Login</Link>
                 </div>
-                <div className="form-group">
-                    <FaLock />
-                    <input
-                        type="password"
-                        name="password"
-                        placeholder="Password"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.password}
-                    />
-                    {formik.touched.password && formik.errors.password ? (
-                        <div className="error">{formik.errors.password}</div>
-                    ) : null}
-                </div>
-                <button type="submit" className="login-button">Login</button>
-                {loginError && <div className="error-message">{loginError}</div>}
-            </form>
-        </div>
-    )
-}
+            </nav>
 
-export default Login
+            <div className="login-container">
+                <div className="login-form">
+                    <h2>Login</h2>
+                    <form onSubmit={formik.handleSubmit}>
+                        <div className="form-group">
+                            <FaUser className="icon" />
+                            <input
+                                type="text"
+                                name="userIdentifier"
+                                placeholder="Email/Username/Phone"
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.userIdentifier}
+                                className="input-field"
+                            />
+                            {/* Error message for userIdentifier */}
+                        </div>
+                        <div className="form-group">
+                            <FaLock className="icon" />
+                            <input
+                                type="password"
+                                name="password"
+                                placeholder="Password"
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.password}
+                                className="input-field"
+                            />
+                            {/* Error message for password */}
+                        </div>
+                        <div className="form-group">
+                            <button type="submit" className="login-button">Login</button>
+                        </div>
+                        {loginError && <div className="error-message">{loginError}</div>}
+                    </form>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Login;

@@ -1,0 +1,71 @@
+/* EmployerProfileManagement.css */
+
+body {
+  background-color: #1a1a1a; /* Dark background for the overall layout */
+  color: #ccc; /* Light text color for contrast */
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.employer-profile-management-container {
+  background-color: #333; /* Darker container background */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); /* More pronounced shadow for depth */
+  padding: 40px; /* Padding inside the container */
+  margin: 40px auto; /* Center the container with automatic margins */
+  max-width: 800px; /* Maximum width of the container */
+}
+
+.employer-profile-management-header {
+  border-bottom: 1px solid #444; /* A darker line to separate the header */
+  padding-bottom: 20px; /* Space below the header line */
+  margin-bottom: 30px; /* Space after the header section */
+}
+
+.employer-profile-management-header h1 {
+  font-size: 28px; /* A larger font size for the title */
+  color: #fff; /* White color for the header text */
+  text-align: center; /* Center the title text */
+}
+
+/* Style the form elements */
+.employer-profile-form .form-field {
+  background-color: #555; /* Dark background for input fields */
+  border: 1px solid #666; /* Slightly lighter border color */
+  color: #ddd; /* Light text color for input content */
+  padding: 12px 20px; /* Padding inside the form fields */
+  border-radius: 5px; /* Rounded corners for form fields */
+  margin-bottom: 20px; /* Margin below each field */
+}
+
+.employer-profile-form .form-field:focus {
+  border-color: #80bdff; /* A light blue border for focus */
+  box-shadow: none; /* No glow effect for a cleaner style */
+}
+
+/* Button styling */
+.employer-profile-form .edit-button {
+  background-color: #007bff; /* Use a theme color for the edit button */
+  color: #fff; /* White text on the colored button */
+  padding: 12px 25px; /* Padding inside the button */
+  border: none; /* Remove the border for a modern look */
+  border-radius: 5px; /* Rounded corners for the button */
+  cursor: pointer; /* Pointer cursor on hover */
+  margin-top: 10px; /* Margin above the button */
+}
+
+.employer-profile-form .edit-button:hover {
+  background-color: #0056b3; /* Darken the button on hover */
+}
+
+/* Error message styling */
+.employer-profile-form .error-message {
+  color: #ffaaaa; /* Light red color for errors for better visibility */
+  margin-top: 5px; /* Small space above error message */
+  font-size: 14px; /* Font size for error text */
+}
+
+@media (max-width: 768px) {
+  .employer-profile-management-container {
+      padding: 25px; /* Adjust padding on smaller screens */
+  }
+}

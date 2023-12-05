@@ -11,9 +11,9 @@ from wtforms import StringField, PasswordField, BooleanField, SelectField, DateF
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Regexp
 from flask_login import current_user, login_required, logout_user
 from models import db, User, Jobseeker, Employer, JobPosting, Notification, ContactRequest, Admin
-import os
-from datetime import datetime
+import requests
 import base64
+import datetime
 
 app = Flask(__name__)
 
@@ -27,6 +27,44 @@ db.init_app(app)
 migrate = Migrate(app, db)
 login_manager = LoginManager(app)
 csrf = CSRFProtect(app)
+
+CONSUMER_KEY = 'ksx4CGm3sjJFBVoWbEySqiuTAkjA1nr8'
+CONSUMER_SECRET = 'JPplKP1go79NifUZ'
+BUSINESS_SHORT_CODE = '174379'
+LIPA_NA_MPESA_PASSKEY = 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919'  # Your passkey
+CALLBACK_URL = 'https://mydomain.com/path'
+
+def get_access_token():
+    api_url = 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
+    credentials = base64.b64encode(f'{CONSUMER_KEY}:{CONSUMER_SECRET}'.encode()).decode('utf-8')
+    headers = {'Authorization': f'Basic {credentials}'}
+    response = requests.get(api_url, headers=headers)
+    return response.json().get('access_token')
+
+def stk_push(phone_number, amount=1):
+    access_token = get_access_token()
+    api_url = 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest'
+    headers = {'Authorization': f'Bearer {access_token}'}
+
+    timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+    password = base64.b64encode(f'{BUSINESS_SHORT_CODE}{LIPA_NA_MPESA_PASSKEY}{timestamp}'.encode()).decode('utf-8')
+
+    payload = {
+        'BusinessShortCode': BUSINESS_SHORT_CODE,
+        'Password': password,
+        'Timestamp': timestamp,
+        'TransactionType': 'CustomerPayBillOnline',
+        'Amount': amount,  # The amount to be paid
+        'PartyA': phone_number,  # Employer's phone number
+        'PartyB': BUSINESS_SHORT_CODE,
+        'PhoneNumber': phone_number,  # Employer's phone number
+        'CallBackURL': CALLBACK_URL,
+        'AccountReference': 'EmployerVerification',
+        'TransactionDesc': 'Employer Verification Payment'
+    }
+
+    response = requests.post(api_url, json=payload, headers=headers)
+    return response.json()
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -258,7 +296,8 @@ class GetJobseekerProfileResource(Resource):
             'availability': jobseeker.availability,
             'job_category': jobseeker.job_category,
             'salary_expectations': jobseeker.salary_expectations,
-            'file_approval_status': jobseeker.file_approval_status
+            'file_approval_status': jobseeker.file_approval_status,
+            'is_verified':jobseeker.is_verified
         }
 
         return profile_data, 200
@@ -595,25 +634,41 @@ api.add_resource(ViewAllJobseekersResource, '/jobseekers/view')
 class ContactJobseekerResource(Resource):
     @login_required
     def post(self):
+        # Check if current user is an employer
         if current_user.type != 'employer':
             return {'message': 'Unauthorized access'}, 401
 
+        # Parse the incoming data from the request
         form_data = request.get_json()
         jobseeker_id = form_data.get('jobseeker_id')
         message = form_data.get('message')
 
+        # Validate the message content
         if not message:
             return {'message': 'Message is required'}, 400
 
+        # Create a new contact request
         contact_request = ContactRequest(
             sender_id=current_user.id,
             receiver_id=jobseeker_id,
             message=message
         )
 
+        # Add the contact request to the database
         db.session.add(contact_request)
+
+        # Create a notification for the jobseeker including the employer's message
+        notification_message = f"New contact request from {current_user.company_name}: '{message}'"
+        notification = Notification(
+            user_id=jobseeker_id,
+            message=notification_message
+        )
+
+        # Add the notification to the database
+        db.session.add(notification)
         db.session.commit()
 
+        # Return a success message
         return {'message': 'Contact request sent successfully'}, 201
 
 api.add_resource(ContactJobseekerResource, '/jobseeker/contact')
@@ -689,6 +744,7 @@ class EmployerSearchResource(Resource):
         jobseekers = query.all()
         result = [{
             'id': js.id,
+            'username': js.username,
             'resume': js.resume,
             'availability': js.availability,
             'job_category': js.job_category,
@@ -721,7 +777,7 @@ class AdminUserManagementResource(Resource):
 
     @login_required
     def delete(self, user_id):
-        if not current_user.is_admin:
+        if current_user.type != 'admin':
             return {'message': 'Unauthorized access'}, 401
 
         user = User.query.get(user_id)
@@ -788,6 +844,31 @@ class AdminJobseekerProfileResource(Resource):
         return {'jobseekers': jobseeker_profiles}, 200
 
 api.add_resource(AdminJobseekerProfileResource, '/admin/jobseekers')
+
+class STKPushResource(Resource):
+    def post(self):
+        data = request.get_json()
+        phone_number = data.get('phone_number')
+        amount = data.get('amount')
+        response = stk_push(phone_number, amount)
+        return response
+
+api.add_resource(STKPushResource, '/stk-push')
+
+class STKCallbackResource(Resource):
+    def post(self):
+        data = request.get_json()
+        phone_number = data['Body']['stkCallback']['CallbackMetadata']['Item'][4]['Value']
+
+        employer = Employer.query.filter_by(phone_number=phone_number).first()
+        if employer:
+            employer.verified = True
+            db.session.commit()
+            return {'status': 'success', 'message': 'Employer verified successfully.'}
+        else:
+            return {'status': 'failed', 'message': 'Employer not found.'}, 404
+
+api.add_resource(STKCallbackResource, '/stk-callback') 
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

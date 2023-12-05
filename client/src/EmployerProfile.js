@@ -63,7 +63,7 @@ function EmployerProfile(props) {
     }
 
     return (
-        <div>
+        <div className='employer-profile-container'>
             <h1>Create Employer Profile</h1>
             <Formik
                 initialValues={{ company_name: '', company_image: '', company_description: '' }}
@@ -71,7 +71,7 @@ function EmployerProfile(props) {
                 onSubmit={handleSubmit}
             >
                 {({ isSubmitting }) => (
-                    <Form>
+                    <Form className='.employer-creation-profile-form'>
                         <Field type="text" name="company_name" placeholder="Company Name" />
                         <ErrorMessage name="company_name" component="div" />
 

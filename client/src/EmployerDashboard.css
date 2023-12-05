@@ -1,0 +1,124 @@
+/* EmployerDashboard.css */
+
+.employer-dashboard {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    background: #f7f7f7;
+}
+
+.employer-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2c3e50; /* Dark slate color for professionalism */
+    color: white;
+    padding: 1rem; /* Comfortable padding around items */
+}
+
+.brand-container {
+    display: flex;
+    align-items: center;
+}
+
+.brand-icon {
+    font-size: 2rem; /* Slightly larger icon for visibility */
+    margin-right: 0.5rem;
+}
+
+.brand-name {
+    font-size: 1.5rem; /* Large, readable text */
+}
+
+.employer-nav ul {
+    list-style: none;
+    display: flex;
+    gap: 1rem; /* Space out navigation items */
+}
+
+.employer-nav li {
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border-radius: 5px; /* Rounded corners for nav items */
+    transition: background-color 0.3s ease;
+}
+
+.employer-nav li:hover {
+    background-color: #34495e; /* Slightly lighter background on hover */
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+}
+
+.notification-icon {
+    position: relative;
+    margin-right: 1rem;
+    cursor: pointer;
+}
+
+.notification-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: #e74c3c; /* Attention-grabbing color */
+    border-radius: 50%;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 20px; /* Ensure visibility at small sizes */
+    height: 20px;
+}
+
+.logout-button {
+    background-color: #e74c3c; /* Consistent with notification count for visual symmetry */
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s;
+}
+
+.logout-button:hover {
+    background-color: #c0392b; /* Darken the button on hover for feedback */
+}
+
+/* Main content styling */
+main {
+    padding: 2rem;
+    background: white;
+    margin-top: 1rem; /* Separate from navbar */
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+    border-radius: 5px; /* Soften the overall look */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .employer-nav ul {
+        flex-direction: column; /* Stack nav items on smaller screens */
+        gap: 0.5rem;
+    }
+
+    .employer-dashboard {
+        padding: 0.5rem;
+    }
+
+    .employer-navbar {
+        flex-direction: column;
+        align-items: flex-start; /* Align items to the start on smaller screens */
+    }
+
+    .nav-right {
+        width: 100%; /* Full width for alignment */
+        justify-content: space-between; /* Space out elements */
+        margin-top: 1rem; /* Add space between nav and logout/notification */
+    }
+
+    .logout-button {
+        width: 100%; /* Full-width button on mobile for easier access */
+    }
+}

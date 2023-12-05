@@ -71,8 +71,8 @@ function EmployerProfileManagement() {
     })
 
     return (
-        <div>
-            <h1>Employer Profile Management</h1>
+        <div className='employer-profile-management-container'>
+            <h1 className='employer-profile-management-header '>Employer Profile Management</h1>
             <Formik
                 initialValues={profileData}
                 validationSchema={validationSchema}
@@ -80,7 +80,7 @@ function EmployerProfileManagement() {
                 enableReinitialize
             >
                 {({ isSubmitting }) => (
-                    <Form>
+                    <Form className='.employer-profile-form'>
                         <Field type="text" name="company_name" disabled={!editMode} />
                         <ErrorMessage name="company_name" component="div" />
 

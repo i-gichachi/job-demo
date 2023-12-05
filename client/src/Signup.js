@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Navbar, Nav } from 'react-bootstrap';
 import { FaHome } from 'react-icons/fa'; 
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -117,16 +116,17 @@ const Signup = () => {
     })
 
     return (
-        <div>
-            {/* Navbar with links to signup and login */}
-            <Navbar bg="light" expand="lg">
-                <Navbar.Brand href="#home"><FaHome /> Home</Navbar.Brand>
-                <Nav className="ml-auto">
-                    <Nav.Link as={Link} to="/signup">Sign Up</Nav.Link>
-                    <Nav.Link as={Link} to="/login">Login</Nav.Link>
-                </Nav>
-            </Navbar>
-            <form onSubmit={formik.handleSubmit}>
+        <div className="signup">
+            <nav className="navbar">
+                <Link to="/" className="navbar-brand"><FaHome /> Home</Link>
+                <div className="navbar-nav">
+                    <Link to="/signup" className="nav-item">Sign Up</Link>
+                    <Link to="/login" className="nav-item">Login</Link>
+                </div>
+            </nav>
+            <div className="signup-container">
+                <h2 className="signup-title">Create Account</h2>
+                <form className="signup-form" onSubmit={formik.handleSubmit}>
                 {/* Username */}
                 <input
                     type="text"
@@ -247,6 +247,7 @@ const Signup = () => {
                 </label>
                 <button type="submit" disabled={formik.isSubmitting}>Sign Up</button>
             </form>
+        </div>
         </div>
     )
 }

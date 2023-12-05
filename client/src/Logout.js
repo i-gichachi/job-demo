@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Logout.css';
 
 function Logout() {
     const [csrfToken, setCsrfToken] = useState('')

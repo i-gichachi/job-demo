@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import './JobpostingDescription.css';
 
 function JobpostingDescription({ jobpostingId }) {
     const [jobPosting, setJobPosting] = useState(null)

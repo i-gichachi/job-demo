@@ -72,8 +72,8 @@ function JobseekerProfile(props) {
     };
 
     return (
-        <div>
-            <h1>Create Jobseeker Profile</h1>
+        <div className="jobseeker-profile-container">
+            <h1 className="jobseeker-profile-header">Create Jobseeker Profile</h1>
             <Formik
                 initialValues={{
                     resume: '',
@@ -86,7 +86,7 @@ function JobseekerProfile(props) {
                 onSubmit={handleSubmit}
             >
                 {({ isSubmitting }) => (
-                    <Form>
+                    <Form className='jobseeker-profile-form'>
                         <div>
                             <label htmlFor="resume">Resume:</label>
                             <Field type="text" name="resume" placeholder="Google Docs link" />

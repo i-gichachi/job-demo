@@ -1,0 +1,100 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+/* Updated navbar styles for a gray background */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2c3e50; /* Dark slate color for professionalism */
+    color: white;
+    padding: 1rem
+}
+
+.navbar-brand, .navbar-nav .nav-item {
+    color: #fff;
+    text-decoration: none;
+    padding: 0.5em 1em;
+    transition: color 0.3s ease;
+}
+
+.navbar-brand:hover, .navbar-nav .nav-item:hover {
+    color: #ddd; /* Lighter gray color on hover */
+}
+
+/* Card styles with added padding */
+.card {
+    display: flex;
+    flex-direction: row; /* Content side by side */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Align content vertically */
+    height: calc(100vh - 4rem); /* Adjusted for padding */
+    margin-bottom: 2rem; /* Increased space between cards */
+    text-align: left; /* Align text to the left */
+    padding: 2rem; /* Padding around the card */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional shadow for depth */
+    background: #fff; /* Background color for card */
+}
+
+.card-image {
+    flex: 0 0 60%; /* Image takes up 60% of the card, flex-basis set to 60% */
+    height: 100%; /* Full height of the card */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+  }
+  
+  /* Ensure the card content's height matches the image if it's taller */
+  .card-content {
+    flex: 0 0 40%; /* Content takes up 40% of the card, flex-basis set to 40% */
+    padding: 2em; /* Padding around the text content */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center content vertically */
+    align-items: flex-start; /* Align content to the start (left) */
+  }
+  
+  /* Make sure the .card itself is a flex container that allows wrapping */
+  .card {
+    display: flex;
+    flex-wrap: nowrap; /* Don't wrap on large screens */
+    align-items: stretch; /* Stretch items to fill the height */
+    height: calc(100vh - 4rem); /* Adjusted height to account for padding */
+    margin-bottom: 2rem; /* Space between cards */
+    padding: 2rem; /* Padding inside the card */
+  }
+  
+  /* Alternate the image and content for even cards */
+  .card:nth-child(even) .card-image {
+    order: 2; /* Image on the right side for even cards */
+  }
+  
+  .card:nth-child(even) .card-content {
+    order: 1; /* Content on the left side for even cards */
+    align-items: flex-end; /* Align content to the end (right) for even cards */
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .card {
+      flex-direction: column; /* Stack image and content on smaller screens */
+      height: auto; /* Height is set to auto to contain all inner content */
+      padding: 1rem; /* Reduced padding on smaller screens */
+    }
+  
+    .card-image, .card-content {
+      flex-basis: auto; /* Allow the image and content to take the necessary space */
+      width: 100%; /* Full width for both image and content on smaller screens */
+      order: unset; /* Keep the natural order on smaller screens */
+    }
+  
+    .card-content {
+      align-items: center; /* Center align the content on smaller screens */
+    }
+  }

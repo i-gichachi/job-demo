@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Navbar, Nav, Badge, Dropdown } from 'react-bootstrap';
 import { FaUserShield, FaBell } from 'react-icons/fa';
 import AccountSettings from './AccountSetting';
 import AdminContentModeration from './AdminContentModeration';
@@ -8,95 +7,95 @@ import AdminUserManagement from './AdminUserManagement';
 import Notifications from './Notification';
 import Logout from './Logout';
 import { useUserContext } from './UserContext';
+import './AdminDashboard.css';
 
 function AdminDashboard() {
-    const [activeComponent, setActiveComponent] = useState('userManagement')
-    const { user } = useUserContext()
-    const [notifications, setNotifications] = useState([])
+    const [activeComponent, setActiveComponent] = useState('userManagement');
+    const [showNotifications, setShowNotifications] = useState(false);
+    const { user } = useUserContext();
+    const [notifications, setNotifications] = useState([]);
 
     useEffect(() => {
-        console.log("User Data: ", user)
-        fetchNotifications()
-    }, [])
+        // Assuming 'user' is not null or undefined.
+        console.log("User Data: ", user);
+        fetchNotifications();
+    }, [user]); // Correctly passing 'user' as a dependency.
 
     const fetchNotifications = async () => {
         try {
-            const response = await fetch('/notifications', { method: 'GET' })
+            const response = await fetch('/notifications', { method: 'GET' });
             if (response.ok) {
-                const data = await response.json()
+                const data = await response.json();
                 setNotifications(data);
             }
         } catch (error) {
-            console.error('Error fetching notifications:', error)
+            console.error('Error fetching notifications:', error);
         }
-    }
+    };
 
     const markNotificationAsRead = (notificationId) => {
-        setNotifications(notifications.map(n => n.id === notificationId ? { ...n, is_read: true } : n))
-    }
+        setNotifications(notifications.map(n => n.id === notificationId ? { ...n, is_read: true } : n));
+    };
+
+    const handleAllRead = () => {
+        setNotifications(notifications.map(notification => ({
+            ...notification,
+            is_read: true
+        })));
+        setShowNotifications(false); // Hide notifications dropdown
+    };
+
+    const toggleNotifications = () => {
+        setShowNotifications(!showNotifications);
+    };
 
     const renderComponent = () => {
         switch (activeComponent) {
             case 'accountSettings':
-                return <AccountSettings />
+                return <AccountSettings />;
             case 'contentModeration':
-                return <AdminContentModeration />
+                return <AdminContentModeration />;
             case 'fileApproval':
-                return <AdminFileApproval />
+                return <AdminFileApproval />;
             case 'userManagement':
-                return <AdminUserManagement />
+                return <AdminUserManagement />;
             case 'notifications':
-                return <Notifications />
+                return <Notifications onAllRead={handleAllRead} />;
             default:
-                return <div>Select a component</div>
+                return <div>Select a component</div>;
         }
-    }
+    };
 
-    const unreadNotificationsCount = notifications.filter(n => !n.is_read).length
+    const unreadNotificationsCount = notifications.filter(n => !n.is_read).length;
 
     return (
-        <Container fluid>
-            <div className="navbar-container">
-            <Navbar bg="light" expand="lg">
-                <Navbar.Brand href="#home">
+        <div className="admin-dashboard">
+            <header className="admin-navbar">
+                <div className="admin-brand">
                     {user && user.userType === 'admin' && <FaUserShield />}
                     {user ? user.username : 'Loading...'}
-                </Navbar.Brand>
-                <Nav className="me-auto">
-                    <Nav.Link onClick={() => setActiveComponent('accountSettings')}>Account Settings</Nav.Link>
-                    <Nav.Link onClick={() => setActiveComponent('contentModeration')}>Content Moderation</Nav.Link>
-                    <Nav.Link onClick={() => setActiveComponent('fileApproval')}>File Approval</Nav.Link>
-                    <Nav.Link onClick={() => setActiveComponent('userManagement')}>User Management</Nav.Link>
-                </Nav>
-                <Nav>
-                    <Dropdown>
-                        <Dropdown.Toggle variant="light" id="dropdown-basic">
-                            <FaBell />
-                            {unreadNotificationsCount > 0 && (
-                                <Badge pill variant="danger">{unreadNotificationsCount}</Badge>
-                            )}
-                        </Dropdown.Toggle>
-
-                        <Dropdown.Menu>
-                            {notifications.map(notification => (
-                                <Dropdown.Item 
-                                    key={notification.id}
-                                    onClick={() => markNotificationAsRead(notification.id)}
-                                >
-                                    {notification.message}
-                                    {!notification.is_read && <Badge pill variant="danger">New</Badge>}
-                                </Dropdown.Item>
-                            ))}
-                        </Dropdown.Menu>
-                    </Dropdown>
-                </Nav>
-                <Logout />
-            </Navbar>
-            <div>
+                </div>
+                <nav className="admin-nav">
+                    <button onClick={() => setActiveComponent('accountSettings')}>Account Settings</button>
+                    <button onClick={() => setActiveComponent('contentModeration')}>Content Moderation</button>
+                    <button onClick={() => setActiveComponent('fileApproval')}>File Approval</button>
+                    <button onClick={() => setActiveComponent('userManagement')}>User Management</button>
+                </nav>
+                <div className="admin-right">
+                    <span className="notification-bell" onClick={toggleNotifications}>
+                        <FaBell />
+                        {unreadNotificationsCount > 0 &&
+                            <sup className="notification-count">{unreadNotificationsCount}</sup>
+                        }
+                    </span>
+                    <Logout />
+                </div>
+            </header>
+            <main>
+                {showNotifications && <Notifications notifications={notifications} onAllRead={handleAllRead} />}
                 {renderComponent()}
-            </div>
-            </div>
-        </Container>
+            </main>
+        </div>
     );
 }
 

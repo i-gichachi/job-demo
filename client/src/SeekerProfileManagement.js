@@ -97,7 +97,7 @@ function SeekerProfileManagement() {
     }
 
     return (
-        <div>
+        <div className="jobseeker-profile-management-container">
             <h1>Jobseeker Profile Management</h1>
             <Formik
                 initialValues={profileData}
@@ -112,6 +112,8 @@ function SeekerProfileManagement() {
                         <label htmlFor="resume">Resume:</label>
                         <Field type="text" name="resume" disabled={!editMode}/>
                         <ErrorMessage name="resume" component="div" />
+
+                        <label htmlFor="profile_status">Profile Status:</label>
                         <Field as="select" name="profile_status" disabled={!editMode}>
                             <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>
@@ -119,6 +121,7 @@ function SeekerProfileManagement() {
                         <ErrorMessage name="profile_status" component="div" />
 
                         {/* Availability */}
+                        <label htmlFor="availability">Availability:</label>
                         <Field as="select" name="availability" disabled={!editMode}>
                             <option value="Available">Available</option>
                             <option value="Not-Available">Not-Available</option>
@@ -126,6 +129,7 @@ function SeekerProfileManagement() {
                         <ErrorMessage name="availability" component="div" />
 
                         {/* Job Category */}
+                        <label htmlFor="job_category">Job Category:</label>
                         <Field as="select" name="job_category" disabled={!editMode}>
                         <option value="">Select Job Category</option>
                                 <option value="Healthcare and Medicine">Healthcare and Medicine</option>
