@@ -10,7 +10,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SelectField, DateField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Regexp
 from flask_login import current_user, login_required, logout_user
-from models import db, User, Jobseeker, Employer, JobPosting, Notification, ContactRequest, Admin
+from .models import db, User, Jobseeker, Employer, JobPosting, Notification, ContactRequest, Admin
 import requests
 import base64
 import datetime
