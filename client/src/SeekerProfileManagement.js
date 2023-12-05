@@ -4,6 +4,8 @@ import * as Yup from 'yup';
 import { useUserContext } from './UserContext';
 import './SeekerProfileManagement.css';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const JobseekerProfileSchema = Yup.object().shape({
     resume: Yup.string().required('Resume link is required'),
     profile_status: Yup.string().required('Profile status is required'),
@@ -27,7 +29,7 @@ function SeekerProfileManagement() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const csrfResponse = await fetch('/csrf_token')
+                const csrfResponse = await fetch(`${API_URL}/csrf_token`)
                 if (csrfResponse.ok) {
                     const csrfData = await csrfResponse.json()
                     setCsrfToken(csrfData.csrf_token)
@@ -36,7 +38,7 @@ function SeekerProfileManagement() {
                 }
 
                 if (user && user.userId) {
-                    const profileResponse = await fetch(`/jobseeker/profile/${user.userId}`)
+                    const profileResponse = await fetch(`${API_URL}/jobseeker/profile/${user.userId}`)
                     if (profileResponse.ok) {
                         const data = await profileResponse.json()
                         setProfileData(data)
@@ -71,7 +73,7 @@ function SeekerProfileManagement() {
             };
 
             if (user && user.userId) {
-                const response = await fetch(`/jobseeker/profile/update/${user.userId}`, requestOptions)
+                const response = await fetch(`${API_URL}/jobseeker/profile/update/${user.userId}`, requestOptions)
                 if (response.ok) {
                     alert('You have successfully updated your profile!')
                     setEditMode(false);

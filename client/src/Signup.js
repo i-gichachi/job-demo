@@ -5,12 +5,14 @@ import * as Yup from 'yup';
 import { useNavigate, Link } from 'react-router-dom';
 import './Signup.css';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const Signup = () => {
     const navigate = useNavigate()
     const [csrfToken, setCsrfToken] = useState('')
 
     useEffect(() => {
-        fetch('/csrf_token')
+        fetch(`${API_URL}/csrf_token`)
             .then(response => response.json())
             .then(data => {
                 if (!data.csrf_token) {
@@ -72,7 +74,7 @@ const Signup = () => {
 
             console.log('Submitting form with values:', values)
 
-            fetch('/signup', {
+            fetch(`${API_URL}/signup`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

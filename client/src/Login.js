@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import { useUserContext } from './UserContext';
 import './Login.css';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const Login = () => {
     const [loginError, setLoginError] = useState('')
     const [csrfToken, setCsrfToken] = useState('')
@@ -16,7 +18,7 @@ const Login = () => {
     useEffect(() => {
         const fetchCsrfToken = async () => {
             try {
-                const response = await fetch('/csrf_token')
+                const response = await fetch(`${API_URL}/csrf_token`)
                 const data = await response.json()
                 setCsrfToken(data.csrf_token)
             } catch (error) {
@@ -38,7 +40,7 @@ const Login = () => {
         }),
         onSubmit: async (values) => {
             try {
-                const response = await fetch('/login', {
+                const response = await fetch(`${API_URL}/login`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

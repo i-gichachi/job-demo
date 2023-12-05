@@ -3,6 +3,7 @@ import { Table, Button, Alert } from 'react-bootstrap';
 import { useUserContext } from './UserContext';
 import './AdminUserManagement.css';
 
+const API_URL = process.env.REACT_APP_API_URL;
 
 function AdminUserManagement() {
     const [users, setUsers] = useState([])
@@ -20,7 +21,7 @@ function AdminUserManagement() {
 
     const fetchCsrfToken = async () => {
         try {
-            const response = await fetch('/csrf_token')
+            const response = await fetch(`${API_URL}/csrf_token`)
             const data = await response.json()
             setCsrfToken(data.csrf_token)
         } catch (error) {
@@ -30,7 +31,7 @@ function AdminUserManagement() {
 
     const fetchUsers = async () => {
         try {
-            const response = await fetch('/admin/users')
+            const response = await fetch(`${API_URL}/admin/users`)
             if (response.ok) {
                 const data = await response.json()
                 setUsers(data.users || [])
@@ -45,7 +46,7 @@ function AdminUserManagement() {
     const handleDeleteUser = async (userId) => {
         if (window.confirm('Are you sure you want to delete this user?')) {
             try {
-                const response = await fetch(`/admin/users/${userId}`, {
+                const response = await fetch(`${API_URL}/admin/users/${userId}`, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',

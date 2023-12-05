@@ -3,6 +3,8 @@ import { FaHome } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import './Homepage.css';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 function Homepage() {
     const [welcomeData, setWelcomeData] = useState({
         message: ''
@@ -11,7 +13,7 @@ function Homepage() {
     useEffect(() => {
         const fetchWelcomeData = async () => {
             try {
-                const response = await fetch('/');
+                const response = await fetch(`${API_URL}/`);
                 if (response.ok && response.headers.get("Content-Type").includes("application/json")) {
                     const data = await response.json();
                     setWelcomeData({

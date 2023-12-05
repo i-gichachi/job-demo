@@ -3,6 +3,8 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import './Jobposting.css';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const jobPostingSchema = Yup.object().shape({
     title: Yup.string().required('Title is required'),
     description: Yup.string().required('Description is required'),
@@ -27,7 +29,7 @@ const counties = [
 function JobPosting() {
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
-            const csrfResponse = await fetch('/csrf_token')
+            const csrfResponse = await fetch(`${API_URL}/csrf_token`)
             const csrfData = await csrfResponse.json()
 
             const requestOptions = {
@@ -39,7 +41,7 @@ function JobPosting() {
                 body: JSON.stringify(values)
             }
 
-            const response = await fetch('/jobposting/create', requestOptions)
+            const response = await fetch(`${API_URL}/jobposting/create`, requestOptions)
             const data = await response.json()
 
             if (response.ok) {

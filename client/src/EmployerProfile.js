@@ -4,6 +4,8 @@ import * as Yup from 'yup';
 import { useUserContext } from './UserContext';
 import './EmployerProfile.css';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 function EmployerProfile(props) {
     const [csrfToken, setCsrfToken] = useState('')
     const [isSubmitted, setIsSubmitted] = useState(false)
@@ -12,7 +14,7 @@ function EmployerProfile(props) {
     useEffect(() => {
         const fetchCsrfToken = async () => {
             try {
-                const response = await fetch('/csrf_token')
+                const response = await fetch(`${API_URL}/csrf_token`)
                 const data = await response.json()
                 setCsrfToken(data.csrf_token)
             } catch (error) {
@@ -38,7 +40,7 @@ function EmployerProfile(props) {
                 },
                 body: JSON.stringify(employerProfileData)
             };
-            const response = await fetch('/employer/profile', requestOptions);
+            const response = await fetch(`${API_URL}/employer/profile`, requestOptions);
             if (response.ok) {
                 setIsSubmitted(true);
                 alert('Employer profile created successfully')
