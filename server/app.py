@@ -18,7 +18,7 @@ import datetime
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = b'f\xc1\x1a\xc4oJ\x18\xa0\xe8KM>\x1eyS\xd3\xed\x11.\xff;\xdc\x9f\x06'  
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://gichachi:9614@localhost/appdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 CORS(app)

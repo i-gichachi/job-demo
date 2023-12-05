@@ -17,6 +17,7 @@ flask-restful = "*"
 email-validator = "*"
 gunicorn = "*"
 honcho = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 

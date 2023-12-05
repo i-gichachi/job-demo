@@ -12,7 +12,7 @@ class User(UserMixin, db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
-    password_hash = db.Column(db.String(128))
+    password_hash = db.Column(db.String(256))
     firstname = db.Column(db.String(64))
     secondname = db.Column(db.String(64))
     surname = db.Column(db.String(64))
@@ -89,7 +89,7 @@ class Employer(User):
     id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
     company_name = db.Column(db.String(120))
     company_image = db.Column(db.String(255))
-    company_description = db.Column(db.String(500))
+    company_description = db.Column(db.String(1000))
     verified = db.Column(db.Boolean, default=False)
 
     __mapper_args__ = {
