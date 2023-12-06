@@ -13,8 +13,6 @@ import PaymentVerification from './PaymentVerification';
 import { useUserContext } from './UserContext';
 import './EmployerDashboard.css';
 
-const API_URL = process.env.REACT_APP_API_URL;
-
 function EmployerDashboard() {
     const [hasProfile, setHasProfile] = useState(false);
     const [activeComponent, setActiveComponent] = useState('jobseekerView');
@@ -27,7 +25,7 @@ function EmployerDashboard() {
         const checkEmployerProfile = async () => {
             if (user && user.userId) {
                 try {
-                    const response = await fetch(`${API_URL}/employer/profile/${user.userId}`)
+                    const response = await fetch(`/employer/profile/${user.userId}`)
                     const profileData = await response.json();
                     if (response.ok) {
                         setHasProfile(true)
@@ -43,7 +41,7 @@ function EmployerDashboard() {
 
         const fetchNotifications = async () => {
             try {
-                const response = await fetch(`${API_URL}/notifications`, { method: 'GET' })
+                const response = await fetch('/notifications', { method: 'GET' })
                 if (response.ok) {
                     const data = await response.json()
                     setNotifications(data)

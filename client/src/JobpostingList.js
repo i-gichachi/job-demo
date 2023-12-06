@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import JobpostingDescription from './JobpostingDescription';
 import './JobpostingList.css';
 
-const API_URL = process.env.REACT_APP_API_URL;
-
 function JobpostingListing() {
     const [jobPostings, setJobPostings] = useState([])
     const [selectedCompany, setSelectedCompany] = useState(null)
@@ -12,7 +10,7 @@ function JobpostingListing() {
     useEffect(() => {
         const fetchJobPostings = async () => {
             try {
-                const response = await fetch(`${API_URL}/jobpostings`)
+                const response = await fetch('/jobpostings')
                 if (response.ok) {
                     const data = await response.json()
                     console.log('Job Postings:', data.postings)

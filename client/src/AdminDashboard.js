@@ -9,8 +9,6 @@ import Logout from './Logout';
 import { useUserContext } from './UserContext';
 import './AdminDashboard.css';
 
-const API_URL = process.env.REACT_APP_API_URL;
-
 function AdminDashboard() {
     const [activeComponent, setActiveComponent] = useState('userManagement');
     const [showNotifications, setShowNotifications] = useState(false);
@@ -25,7 +23,7 @@ function AdminDashboard() {
 
     const fetchNotifications = async () => {
         try {
-            const response = await fetch(`${API_URL}/notifications`, { method: 'GET' });
+            const response = await fetch('/notifications', { method: 'GET' });
             if (response.ok) {
                 const data = await response.json();
                 setNotifications(data);
@@ -101,4 +99,4 @@ function AdminDashboard() {
     );
 }
 
-export default AdminDashboard;
+export default AdminDashboard

@@ -3,8 +3,6 @@ import { FaUser, FaCheckCircle, FaTimesCircle, FaExternalLinkAlt } from 'react-i
 import { useUserContext } from './UserContext';
 import './EmployerJobseekerProfile.css'
 
-const API_URL = process.env.REACT_APP_API_URL;
-
 function EmployerJobseekerView() {
     const [jobseekers, setJobseekers] = useState([])
     const [selectedJobseeker, setSelectedJobseeker] = useState(null)
@@ -22,7 +20,7 @@ function EmployerJobseekerView() {
 
     const fetchCsrfToken = async () => {
         try {
-            const response = await fetch(`${API_URL}/csrf_token`)
+            const response = await fetch('/csrf_token')
             const data = await response.json()
             setCsrfToken(data.csrf_token)
         } catch (error) {
@@ -32,7 +30,7 @@ function EmployerJobseekerView() {
 
     const fetchJobseekers = async () => {
         try {
-            const response = await fetch(`${API_URL}/jobseekers/view`)
+            const response = await fetch('/jobseekers/view')
             if (response.ok) {
                 const data = await response.json()
                 setJobseekers(data.jobseekers)
@@ -52,7 +50,7 @@ function EmployerJobseekerView() {
     const handleContactSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(`${API_URL}/jobseeker/contact`, {
+            const response = await fetch('/jobseeker/contact', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

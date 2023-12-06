@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import './EmployerSearch.css'; // Make sure to create and link this CSS file
 
-const API_URL = process.env.REACT_APP_API_URL;
-
 function EmployerSearch({ onViewProfile }) {
     const [searchParams, setSearchParams] = useState({
         availability: '',
@@ -25,7 +23,7 @@ function EmployerSearch({ onViewProfile }) {
         setError('');
         try {
             const queryString = new URLSearchParams(searchParams).toString();
-            const response = await fetch(`${API_URL}/employer/search?${queryString}`);
+            const response = await fetch(`/employer/search?${queryString}`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }

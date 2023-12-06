@@ -4,8 +4,6 @@ import * as Yup from 'yup';
 import { useUserContext } from './UserContext';
 import './JobpostingManagement.css';
 
-const API_URL = process.env.REACT_APP_API_URL;
-
 const jobPostingSchema = Yup.object().shape({
     title: Yup.string().required('Title is required'),
     description: Yup.string().required('Description is required'),
@@ -26,7 +24,7 @@ function JobPostingManagement() {
     useEffect(() => {
         const fetchJobPostings = async () => {
             if (user && user.userType === 'employer') {
-                const response = await fetch(`${API_URL}/employer/${user.userId}/jobpostings`)
+                const response = await fetch(`/employer/${user.userId}/jobpostings`)
                 if (response.ok) {
                     const data = await response.json()
                     setJobPostings(data.postings)
@@ -44,14 +42,14 @@ function JobPostingManagement() {
 
     const handleDelete = async (jobpostingId) => {
         if (window.confirm('Are you sure you want to delete this job posting?')) {
-            const csrfResponse = await fetch(`${API_URL}/csrf_token`)
+            const csrfResponse = await fetch('/csrf_token')
             const csrfData = await csrfResponse.json()
 
             const requestOptions = {
                 method: 'DELETE',
                 headers: { 'X-CSRFToken': csrfData.csrf_token },
             }
-            const response = await fetch(`${API_URL}/jobposting/delete/${jobpostingId}`, requestOptions)
+            const response = await fetch(`/jobposting/delete/${jobpostingId}`, requestOptions)
             if (response.ok) {
                 alert('Job posting deleted successfully')
                 setJobPostings(jobPostings.filter(posting => posting.id !== jobpostingId))
@@ -67,7 +65,7 @@ function JobPostingManagement() {
     }
 
     const handleUpdateSubmit = async (values, actions) => {
-        const csrfResponse = await fetch(`${API_URL}/csrf_token`)
+        const csrfResponse = await fetch('/csrf_token')
         const csrfData = await csrfResponse.json()
 
         const requestOptions = {
@@ -79,7 +77,7 @@ function JobPostingManagement() {
             body: JSON.stringify(values)
         }
 
-    const response = await fetch(`${API_URL}/jobposting/update/${selectedJobPosting.id}`, requestOptions);
+    const response = await fetch(`/jobposting/update/${selectedJobPosting.id}`, requestOptions);
         if (response.ok) {
             alert('Job posting updated successfully');
             setJobPostings(jobPostings.map(posting => (posting.id === selectedJobPosting.id ? values : posting)))

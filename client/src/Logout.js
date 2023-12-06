@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const API_URL = process.env.REACT_APP_API_URL;
-
 function Logout() {
     const [csrfToken, setCsrfToken] = useState('')
     const navigate = useNavigate()
@@ -10,7 +8,7 @@ function Logout() {
     useEffect(() => {
         const fetchCsrfToken = async () => {
             try {
-                const response = await fetch(`${API_URL}/csrf_token`)
+                const response = await fetch('/csrf_token')
                 const data = await response.json()
                 setCsrfToken(data.csrf_token)
             } catch (error) {
@@ -32,7 +30,7 @@ function Logout() {
                         'X-CSRFToken': csrfToken
                     }
                 };
-                const response = await fetch(`${API_URL}/logout`, requestOptions)
+                const response = await fetch('/logout', requestOptions)
                 if (response.ok) {
                     alert('You have successfully logged out.')
                     navigate('/');

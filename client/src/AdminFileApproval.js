@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Button, Table, Alert } from 'react-bootstrap';
 import './AdminFileApproval.css';
 
-const API_URL = process.env.REACT_APP_API_URL;
-
 function AdminFileApproval() {
     const [jobseekers, setJobseekers] = useState([])
     const [showAlert, setShowAlert] = useState(false)
@@ -17,7 +15,7 @@ function AdminFileApproval() {
 
     const fetchCsrfToken = async () => {
         try {
-            const response = await fetch(`${API_URL}/csrf_token`)
+            const response = await fetch('/csrf_token')
             const data = await response.json()
             setCsrfToken(data.csrf_token)
         } catch (error) {
@@ -27,7 +25,7 @@ function AdminFileApproval() {
 
     const fetchPendingJobseekers = async () => {
         try {
-            const response = await fetch(`${API_URL}/admin/jobseekers`)
+            const response = await fetch('/admin/jobseekers')
             if (response.ok) {
                 const data = await response.json();
                 setJobseekers(data.jobseekers.filter(j => j.file_approval_status === 'pending' || j.file_approval_status === 'rejected'))
@@ -41,7 +39,7 @@ function AdminFileApproval() {
 
     const handleApproval = async (jobseekerId, status) => {
         try {
-            const response = await fetch(`${API_URL}/jobseeker/file-approval/${jobseekerId}`, {
+            const response = await fetch(`/jobseeker/file-approval/${jobseekerId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

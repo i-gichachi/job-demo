@@ -4,8 +4,6 @@ import * as Yup from 'yup';
 import { useUserContext } from './UserContext';
 import './JobseekerProfile.css';
 
-const API_URL = process.env.REACT_APP_API_URL;
-
 const JobseekerProfileSchema = Yup.object().shape({
     resume: Yup.string().required('Resume is required'),
     profile_status: Yup.string().required('Profile status is required'),
@@ -21,7 +19,7 @@ function JobseekerProfile(props) {
     useEffect(() => {
         const fetchCsrfToken = async () => {
             try {
-                const response = await fetch(`${API_URL}/csrf_token`)
+                const response = await fetch('/csrf_token')
                 if (response.ok) {
                     const data = await response.json()
                     setCsrfToken(data.csrf_token)
@@ -54,7 +52,7 @@ function JobseekerProfile(props) {
                 body: JSON.stringify(profileData)
             }
 
-            const response = await fetch(`${API_URL}/jobseeker/profile`, requestOptions)
+            const response = await fetch('/jobseeker/profile', requestOptions)
             const data = await response.json()
 
             if (response.ok) {

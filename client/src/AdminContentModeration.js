@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Table, Button, Alert } from 'react-bootstrap';
 import './AdminContentModeration.css';
 
-const API_URL = process.env.REACT_APP_API_URL;
-
 function AdminContentModeration() {
     const [postings, setPostings] = useState([])
     const [csrfToken, setCsrfToken] = useState('')
@@ -17,7 +15,7 @@ function AdminContentModeration() {
 
     const fetchCsrfToken = async () => {
         try {
-            const response = await fetch(`${API_URL}/csrf_token`)
+            const response = await fetch('/csrf_token')
             const data = await response.json()
             setCsrfToken(data.csrf_token)
         } catch (error) {
@@ -27,7 +25,7 @@ function AdminContentModeration() {
 
     const fetchPostings = async () => {
         try {
-            const response = await fetch(`${API_URL}/admin/content`)
+            const response = await fetch('/admin/content')
             if(response.ok) {
                 const data = await response.json()
                 setPostings(data.postings || [])
@@ -41,7 +39,7 @@ function AdminContentModeration() {
 
     const handleDeletePosting = async (postingId) => {
         try {
-            const response = await fetch(`${API_URL}/admin/content/${postingId}`, {
+            const response = await fetch(`/admin/content/${postingId}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

@@ -10,7 +10,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SelectField, DateField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Regexp
 from flask_login import current_user, login_required, logout_user
-from .models import db, User, Jobseeker, Employer, JobPosting, Notification, ContactRequest, Admin
+from models import db, User, Jobseeker, Employer, JobPosting, Notification, ContactRequest, Admin
 import requests
 import base64
 import datetime
@@ -18,7 +18,7 @@ import datetime
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = b'f\xc1\x1a\xc4oJ\x18\xa0\xe8KM>\x1eyS\xd3\xed\x11.\xff;\xdc\x9f\x06'  
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://gichachi:9614@localhost/appdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://gichachi:9614@localhost/seekingdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 CORS(app)

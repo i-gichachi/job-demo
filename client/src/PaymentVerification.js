@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import './PaymentVerification.css';
 
-const API_URL = process.env.REACT_APP_API_URL;
-
 function PaymentVerification() {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [isProcessing, setIsProcessing] = useState(false);
@@ -11,7 +9,7 @@ function PaymentVerification() {
         setIsProcessing(true)
 
         try {
-            const response = await fetch(`${API_URL}/stk-push`, {
+            const response = await fetch('/stk-push', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

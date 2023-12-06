@@ -3,8 +3,6 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import './AccountSetting.css'
 
-const API_URL = process.env.REACT_APP_API_URL;
-
 const validationSchema = Yup.object().shape({
     username: Yup.string().required('Username is required'),
     email: Yup.string().email('Invalid email').required('Email is required'),
@@ -33,11 +31,11 @@ function AccountSettings() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const csrfResponse = await fetch(`${API_URL}/csrf_token`)
+                const csrfResponse = await fetch('/csrf_token')
                 const csrfData = await csrfResponse.json()
                 setCsrfToken(csrfData.csrf_token)
 
-                const userResponse = await fetch(`${API_URL}/user/info`)
+                const userResponse = await fetch('/user/info')
                 const userData = await userResponse.json()
                 setUserData(userData)
             } catch (error) {

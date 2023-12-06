@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { ListGroup, Button } from 'react-bootstrap';
 import './Notification.css';
 
-const API_URL = process.env.REACT_APP_API_URL;
-
 function Notifications({ onAllRead }) {
     const [notifications, setNotifications] = useState([])
     const [csrfToken, setCsrfToken] = useState('')
@@ -17,7 +15,7 @@ function Notifications({ onAllRead }) {
 
     const fetchCsrfToken = async () => {
         try {
-            const response = await fetch(`${API_URL}/csrf_token`)
+            const response = await fetch('/csrf_token')
             if (response.ok) {
                 const data = await response.json()
                 setCsrfToken(data.csrf_token)
@@ -29,7 +27,7 @@ function Notifications({ onAllRead }) {
 
     const fetchNotifications = async () => {
         try {
-            const response = await fetch(`${API_URL}/notifications`, { method: 'GET' })
+            const response = await fetch('/notifications', { method: 'GET' })
             if (response.ok) {
                 const data = await response.json();
                 setNotifications(data);
@@ -41,7 +39,7 @@ function Notifications({ onAllRead }) {
 
     const markAsRead = async (notificationId) => {
         try {
-            const response = await fetch(`${API_URL}/notifications/read/${notificationId}`, {
+            const response = await fetch(`/notifications/read/${notificationId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

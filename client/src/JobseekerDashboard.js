@@ -9,8 +9,6 @@ import Logout from './Logout';
 import { FaUser, FaBell, FaCheckCircle } from 'react-icons/fa';
 import './JobseekerDashboard.css';
 
-const API_URL = process.env.REACT_APP_API_URL;
-
 function JobseekerDashboard() {
     const [hasProfile, setHasProfile] = useState(false)
     const [activeComponent, setActiveComponent] = useState('')
@@ -20,7 +18,7 @@ function JobseekerDashboard() {
 
     const fetchNotifications = async () => {
         try {
-            const response = await fetch(`${API_URL}/notifications`, { method: 'GET' })
+            const response = await fetch('/notifications', { method: 'GET' })
             if (response.ok) {
                 const data = await response.json()
                 setNotifications(data)
@@ -34,7 +32,7 @@ function JobseekerDashboard() {
         const checkJobseekerProfile = async () => {
             if (user && user.userId) {
                 try {
-                    const response = await fetch(`${API_URL}/jobseeker/profile/${user.userId}`)
+                    const response = await fetch(`/jobseeker/profile/${user.userId}`);
                     const profileData = await response.json();
                     if (response.ok) {
                         setHasProfile(true);
@@ -57,7 +55,7 @@ function JobseekerDashboard() {
 
     const markNotificationAsRead = async (notificationId) => {
         try {
-            const response = await fetch(`${API_URL}/notifications/read/${notificationId}`, { method: 'PUT' });
+            const response = await fetch(`/notifications/read/${notificationId}`, { method: 'PUT' });
             if (response.ok) {
                 fetchNotifications();
             }
